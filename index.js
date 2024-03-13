@@ -4,10 +4,7 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 const { getGameDetailsFromBggXmlResult } = require("./helpers/getGameDetailsFromBggXmlResult");
 
-async function performScraping() {
-  let boardgameData = [];
-  const bggPageCount = 1527;
-  
+async function performScraping() {  
   const getPageData = async (minPageRange, maxPageRange) => {
     for (let pageIndex = minPageRange; pageIndex <= maxPageRange; pageIndex++) {
       // downloading the target web page
@@ -51,21 +48,14 @@ async function performScraping() {
 
   const getPageDataPromises = [];
 
-  // 1527
+  // bgg currently has 1527 browsing pages
   for (let index = 1; index < 1500; index += 100) {
     getPageDataPromises.push(getPageData(index, index+99));  
-    console.log("promise ", index);
   }
 
   getPageDataPromises.push(getPageData(1501, 1527));
 
   await Promise.all(getPageDataPromises)
-
-  // process.stdout.clearLine(0);
-  // process.stdout.cursorTo(0);
-  // process.stdout.write(`Progress: On page ${pageIndex} of ${bggPageCount}`);
 }
-
-  // fs.writeFile("boardgames.json", JSON.stringify({games: boardgameData}), () => {});
 
 performScraping()
